@@ -8,7 +8,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Cli } from "@/components/cli"
 import { CodeBlock } from "@/components/code-block"
 import { EditFormField } from "@/components/edit-form-field"
 import { FormEditor } from "@/components/form-editor"
@@ -85,7 +84,6 @@ export default async function Home() {
               >
                 Code
               </TabsTrigger>
-              <Cli />
             </TabsList>
             <TabsContent value="preview">
               <FormEditor />
