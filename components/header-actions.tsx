@@ -10,7 +10,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -57,25 +56,14 @@ export function HeaderActions() {
     })
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      setSelectedFile(file)
-    }
-  }
+    if (!file) return
 
-  const handleImport = async () => {
-    if (!selectedFile) {
-      toast({
-        title: "Import Failed",
-        description: "Please select a file to import",
-        variant: "destructive",
-      })
-      return
-    }
+    setSelectedFile(file)
 
     try {
-      const text = await selectedFile.text()
+      const text = await file.text()
       const parsed = JSON.parse(text)
 
       // Basic validation
@@ -106,6 +94,10 @@ export function HeaderActions() {
         description: (e as Error).message,
         variant: "destructive",
       })
+      setSelectedFile(null)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
+      }
     }
   }
 
@@ -144,8 +136,7 @@ export function HeaderActions() {
           <DialogHeader>
             <DialogTitle>Import Schema</DialogTitle>
             <DialogDescription>
-              Select a JSON file to import. This will overwrite the current
-              form.
+              Select a JSON file to import. The form will load automatically.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -155,17 +146,7 @@ export function HeaderActions() {
               accept=".json,application/json"
               onChange={handleFileChange}
             />
-            {selectedFile && (
-              <p className="text-sm text-muted-foreground">
-                Selected: {selectedFile.name}
-              </p>
-            )}
           </div>
-          <DialogFooter>
-            <Button onClick={handleImport} disabled={!selectedFile}>
-              Import Schema
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
