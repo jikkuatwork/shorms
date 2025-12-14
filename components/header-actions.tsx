@@ -15,7 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
 import { FormPreviewDialog } from "@/components/form-preview-dialog"
 
 import { FormPage } from "@/types/form-store"
@@ -28,7 +28,17 @@ export function HeaderActions() {
   const setActivePage = useFormStore((state) => state.setActivePage)
 
   const [importOpen, setImportOpen] = React.useState(false)
-  const [importJson, setImportJson] = React.useState("")
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
+
+  React.useEffect(() => {
+    if (!importOpen) {
+      setSelectedFile(null)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
+      }
+    }
+  }, [importOpen])
 
   const handleExport = () => {
     const dataStr = JSON.stringify(pages, null, 2)
@@ -47,9 +57,26 @@ export function HeaderActions() {
     })
   }
 
-  const handleImport = () => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setSelectedFile(file)
+    }
+  }
+
+  const handleImport = async () => {
+    if (!selectedFile) {
+      toast({
+        title: "Import Failed",
+        description: "Please select a file to import",
+        variant: "destructive",
+      })
+      return
+    }
+
     try {
-      const parsed = JSON.parse(importJson)
+      const text = await selectedFile.text()
+      const parsed = JSON.parse(text)
 
       // Basic validation
       if (!Array.isArray(parsed)) {
@@ -66,7 +93,10 @@ export function HeaderActions() {
       }
 
       setImportOpen(false)
-      setImportJson("")
+      setSelectedFile(null)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
+      }
       toast({
         description: "Schema imported successfully!",
       })
@@ -114,20 +144,27 @@ export function HeaderActions() {
           <DialogHeader>
             <DialogTitle>Import Schema</DialogTitle>
             <DialogDescription>
-              Paste your Shorms JSON schema here. This will overwrite current
+              Select a JSON file to import. This will overwrite the current
               form.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <Textarea
-              className="min-h-[200px] font-mono text-xs"
-              placeholder='[ { "id": "page-1", "fields": [...] } ]'
-              value={importJson}
-              onChange={(e) => setImportJson(e.target.value)}
+            <Input
+              ref={fileInputRef}
+              type="file"
+              accept=".json,application/json"
+              onChange={handleFileChange}
             />
+            {selectedFile && (
+              <p className="text-sm text-muted-foreground">
+                Selected: {selectedFile.name}
+              </p>
+            )}
           </div>
           <DialogFooter>
-            <Button onClick={handleImport}>Import Schema</Button>
+            <Button onClick={handleImport} disabled={!selectedFile}>
+              Import Schema
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
