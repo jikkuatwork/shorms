@@ -7,36 +7,51 @@ advanced validation, JSON import/export, and code generation.
 Database and sharing features have been removed to focus on local-first
 development.
 
+## Recent Updates (Session: Dec 2025)
+
+- Fixed Next.js cache issues and 404 static asset errors
+- Fixed React hydration warning for dnd-kit (SSR/client mismatch)
+- Added file upload field type with validation
+- Implemented JSON-first workflow (removed Code tab)
+- Added drag-and-drop page reordering
+- Implemented inline tab editing (double-click)
+- Changed import to auto-load on file selection (no extra button)
+- Widened right sidebar for better editing experience
+
 ## Current State
 
 ✅ **Complete**
 
 - Multi-page form builder with page management
+- Drag-and-drop page reordering with inline editing
 - Advanced validation (regex, required, custom messages)
 - Form preview with Form Runner
-- JSON import/export
+- JSON import/export (file-based, auto-loading)
 - Code generation for single and multi-page forms
 - Local state management (Zustand + localStorage)
+- File upload field type
+- SSR-compatible with proper hydration
 
 ## Potential Future Enhancements
 
 ### Additional Field Types
 
-- File Upload (with size/type validation)
 - OTP Input (with auto-focus)
 - Phone Number Input (with country codes)
 - Multi-select dropdown
 - Rich text editor field
+- Color picker field
+- Rating/Stars field
 
 ### UX Improvements
 
-- Drag-and-drop for page reordering
 - Undo/Redo functionality
 - Keyboard shortcuts
 - Form templates/presets
 - Theme customization for generated forms
 - Field duplication
 - Bulk field operations
+- Search/filter fields in large forms
 
 ### Code Generation
 
