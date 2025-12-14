@@ -1,0 +1,2 @@
+- this file is usually the router that shows what to do
+- now we are working with koder/plans/01_shorms-initial.md

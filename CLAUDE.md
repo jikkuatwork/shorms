@@ -1,0 +1,3 @@
+- this file is symlinked to GEMINI.md
+- make this file very short, its loaded on each request
+- conserve tokens, I have very few
