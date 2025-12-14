@@ -15,13 +15,7 @@ import { FormState } from "@/types/form-store"
 
 export interface FieldProps {
   formField: FormFieldType
-  form?: UseFormReturn<
-    {
-      [x: string]: any
-    },
-    any,
-    undefined
-  >
+  form?: UseFormReturn<any>
   style?: React.CSSProperties
   isDragging?: boolean
 }
