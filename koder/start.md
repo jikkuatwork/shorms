@@ -12,10 +12,13 @@
   - testing infrastructure (Vitest with 17 passing tests)
   - schema versioning system with forward compatibility
   - library exports (index.ts) for external usage
-- **CURRENT PRIORITY**: Library refactoring (koder/plans/02_library-refactor.md)
-  - Transform Shorms from app to installable library
-  - Export three components: Builder, Renderer, Viewer
-  - Plan is complete, ready for execution
+- **CURRENT PRIORITY**: Component extraction (koder/plans/03_component-extraction.md)
+  - ✅ Phase 1 Complete: Renderer component extracted
+  - New namespace: components/shorms/renderer/
+  - Implements API Design v3.1.0 (koder/API_DESIGN.md)
+  - Features: state management, validation, suggestions, background jobs
+  - Status: Builds successfully, needs runtime testing
+  - Next: Test renderer → Extract Builder → Create Viewer
 - review koder/NEXT_SESSION.md for current state and next steps
 - review the repo and give me a clear summary of what you understood
   before starting/resuming the work

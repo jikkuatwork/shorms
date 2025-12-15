@@ -156,7 +156,10 @@ export const generateDefaultValues = (
 
 export const zodSchemaToString = (schema: z.ZodTypeAny): string => {
   if (schema instanceof z.ZodDefault) {
-    return `${zodSchemaToString(schema._def.innerType)}.default(${JSON.stringify(schema._def.defaultValue())})`
+    const defaultValue = typeof schema._def.defaultValue === 'function'
+      ? schema._def.defaultValue()
+      : schema._def.defaultValue
+    return `${zodSchemaToString(schema._def.innerType as z.ZodTypeAny)}.default(${JSON.stringify(defaultValue)})`
   }
 
   if (schema instanceof z.ZodBoolean) {
@@ -165,8 +168,8 @@ export const zodSchemaToString = (schema: z.ZodTypeAny): string => {
 
   if (schema instanceof z.ZodNumber) {
     let result = "z.coerce.number()"
-    if ("checks" in schema._def) {
-      schema._def.checks.forEach((check: z.ZodNumberCheck) => {
+    if ("checks" in schema._def && schema._def.checks) {
+      schema._def.checks.forEach((check: any) => {
         if (check.kind === "min") {
           result += `.min(${check.value}${check.message ? `, "${check.message}"` : ""})`
         } else if (check.kind === "max") {
@@ -179,8 +182,8 @@ export const zodSchemaToString = (schema: z.ZodTypeAny): string => {
 
   if (schema instanceof z.ZodString) {
     let result = "z.string()"
-    if ("checks" in schema._def) {
-      schema._def.checks.forEach((check: z.ZodStringCheck) => {
+    if ("checks" in schema._def && schema._def.checks) {
+      schema._def.checks.forEach((check: any) => {
         if (check.kind === "min") {
           result += `.min(${check.value}${check.message ? `, "${check.message}"` : ""})`
         } else if (check.kind === "max") {
@@ -210,7 +213,7 @@ export const zodSchemaToString = (schema: z.ZodTypeAny): string => {
   }
 
   if (schema instanceof z.ZodOptional) {
-    return `${zodSchemaToString(schema.unwrap())}.optional()`
+    return `${zodSchemaToString(schema.unwrap() as z.ZodTypeAny)}.optional()`
   }
 
   return "z.unknown()"

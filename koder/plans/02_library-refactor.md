@@ -2,9 +2,9 @@
 
 **Goal:** Transform Shorms from a standalone Next.js application into an installable library that can be integrated into other projects (specifically Onesource) as a git dependency.
 
-**Status:** Not Started
+**Status:** Partially Complete (dependencies upgraded, see plan 03 for component extraction)
 **Created:** 2025-12-15
-**Target Completion:** ~5 days of work
+**Updated:** 2025-12-15
 
 ---
 
@@ -13,10 +13,11 @@
 ### Current State
 Shorms is a complete Next.js application with:
 - Full app structure (`app/`, `pages/`, standalone deployment)
-- Zod v3.23.8 (validation library)
-- React 18.x
+- ✅ Zod v4.1.13 (upgraded)
+- ✅ React 19.2.0 (upgraded)
 - Tailwind CSS v3.4.1
-- No library exports - cannot be installed as a dependency
+- ✅ Has index.ts with partial exports (types, utilities)
+- ❌ Components not exported yet (see plan 03)
 
 ### Target Use Case
 Onesource (and similar projects) need to:
@@ -37,14 +38,14 @@ Onesource (and similar projects) need to:
 
 ### Blockers Identified
 
-| Issue | Severity | Impact |
-|-------|----------|--------|
-| Zod v3 → v4 upgrade | **CRITICAL** | Breaking API changes, Onesource uses v4 |
-| React 18 → 19 upgrade | **CRITICAL** | Runtime errors, hook behavior differences |
-| App structure (not library) | **CRITICAL** | Cannot be imported as dependency |
-| No schema versioning | **HIGH** | Breaking changes will break existing forms |
-| Tailwind v3 → v4 | **MEDIUM** | CSS conflicts with parent projects |
-| No tests | **HIGH** | Cannot safely refactor without breaking things |
+| Issue | Severity | Status | Notes |
+|-------|----------|--------|-------|
+| Zod v3 → v4 upgrade | **CRITICAL** | ✅ **DONE** | Upgraded to v4.1.13 |
+| React 18 → 19 upgrade | **CRITICAL** | ✅ **DONE** | Upgraded to v19.2.0 |
+| App structure (not library) | **CRITICAL** | 🔄 **IN PROGRESS** | See plan 03 for component extraction |
+| No schema versioning | **HIGH** | ✅ **DONE** | Schema versioning system in place |
+| Tailwind v3 → v4 | **MEDIUM** | ⏸️ **DEFERRED** | Will address when packaging |
+| No tests | **HIGH** | ✅ **DONE** | Vitest with 17 passing tests |
 
 ---
 

@@ -15,8 +15,11 @@
  * Field types and form structure definitions
  */
 export { FieldType } from './types/field'
-export type { FormField, FormPage, ShormsSchema } from './types/field'
-export type { FormState } from './types/form-store'
+export type { FormField } from './types/field'
+export type { FormState, FormPage } from './types/form-store'
+
+// Note: ShormsSchema is not available in legacy types
+// Use the new Renderer types for the full schema with versioning
 
 // ============================================================================
 // Schema Versioning
@@ -60,16 +63,30 @@ export {
 } from './lib/form-schema'
 
 // ============================================================================
-// React Components (Coming Soon)
+// React Components
 // ============================================================================
 
 /**
- * React components will be exported here after Next.js dependencies are removed
- * and components are extracted to framework-agnostic versions.
+ * Shorms Renderer - Form rendering component with validation and suggestions
  *
- * Planned exports:
- * - FormBuilder: Interactive form builder component
- * - FormRenderer: Form rendering component
- * - FormViewer: Read-only form viewer component
- * - FieldCommandPalette: Command palette for field selection
+ * Note: The Renderer uses a new API design (v3.1.0) with extensible field types
+ * and advanced features like state management, suggestions, and background jobs.
+ *
+ * For the new API types, import from '@/components/shorms/renderer' or see API_DESIGN.md
+ */
+export { Renderer } from './components/shorms/renderer'
+export type {
+  // Note: These types from the new renderer may conflict with legacy types above
+  // Use qualified imports if needed: import type { FormField as RendererFormField } from '@/components/shorms/renderer'
+  RendererProps,
+  FormStateAPI,
+  FieldSuggestionState,
+  BulkSuggestResponse,
+  BackgroundJob,
+} from './components/shorms/renderer'
+
+/**
+ * Planned additional exports:
+ * - Builder: Interactive form builder component (extracted from FormEditor)
+ * - Viewer: Read-only form viewer component
  */
