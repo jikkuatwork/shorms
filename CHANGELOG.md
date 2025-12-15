@@ -7,14 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planning
-- **Library Refactoring Plan** (koder/plans/02_library-refactor.md)
-  - Comprehensive 7-phase plan to transform Shorms into installable library
-  - Design decisions finalized for component API (Builder, Renderer, Viewer)
-  - Strategy for dependency upgrades (Zod v4, React 19)
-  - Monorepo structure with @shorms/core and @shorms/react packages
-  - Forward compatibility strategy for unknown field types
-  - State persistence, draft saving, and file upload patterns defined
+## [0.2.0] - 2025-12-15
+
+### Library-Ready Beta Release
+
+This release upgrades major dependencies and adds library support. Still in beta as compatibility testing continues.
+
+### Breaking Changes
+- Upgraded to Zod v4 (from v3) - Schema generation changes
+- Upgraded to React 19 (from v18) - Component behavior changes
+- Upgraded to Next.js 16 (from v14)
+
+### Known Issues
+- Email validation may be stricter in Zod v4
+- Date field handling requires testing across different input formats
+
+### Added
+- **Library Exports**: Main index.ts exports types and utilities for external usage
+- **Schema Versioning System**:
+  - ShormsSchema interface with version field
+  - validateSchema() - Validates schemas with forward compatibility
+  - migrateSchema() - Migration utilities for future versions
+  - SUPPORTED_FIELD_TYPES - Field type registry
+  - Graceful handling of unknown field types
+- **Testing Infrastructure**:
+  - Vitest setup with 17 passing tests
+  - Form schema generation tests
+  - Example form compatibility tests
+  - Versioning validation tests
+- **Library Usage Documentation** (LIBRARY_USAGE.md)
+- **Type Safety**: Full TypeScript support for all exports
+
+### Changed
+- Default values now provided for all form fields (prevents controlled/uncontrolled warnings)
+- Form reset logic improved for dynamic field changes
+- Package.json configured for library usage (main, types exports)
+
+### Fixed
+- React 19 controlled/uncontrolled input warnings
+- Form state synchronization when fields are added/removed
+- Zod v4 email validation compatibility
+
+### Technical
+- Zod: v3.23.8 → v4.1.13
+- React: 18.x → 19.2.0
+- Next.js: 14.2.16 → 16.0.4
+- Added vitest, @testing-library/react for testing
+- Simplified library structure (no monorepo complexity)
 
 ### Added
 - Unique field ID generation using nanoid (collision-resistant)

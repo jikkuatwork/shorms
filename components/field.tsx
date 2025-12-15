@@ -46,12 +46,13 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
           <TooltipWrapper text="Edit field">
             <Button
               size="icon"
-              variant="ghost"
+              variant="secondary"
               onClick={() => {
                 setSelectedFormField(formField.id)
                 setIsEditFormFieldOpen(true)
               }}
               type="button"
+              className="h-8 w-8 hover:bg-primary hover:text-primary-foreground"
             >
               <PenIcon className="size-4" />
             </Button>
@@ -59,9 +60,10 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
           <TooltipWrapper text="Delete field" side="bottom">
             <Button
               size="icon"
-              variant="ghost"
+              variant="secondary"
               onClick={() => deleteFormField(formField.id)}
               type="button"
+              className="h-8 w-8 hover:bg-destructive hover:text-destructive-foreground"
             >
               <Trash2 className="size-4" />
             </Button>
@@ -78,10 +80,10 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
         </div>
         <Button
           size="icon"
-          variant="ghost"
+          variant="secondary"
           type="button"
           {...props}
-          className="absolute -right-12 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute -right-12 top-1/2 h-8 w-8 -translate-y-1/2 opacity-0 transition-opacity hover:bg-primary hover:text-primary-foreground group-hover:opacity-100"
         >
           <GripVertical className="size-4" />
         </Button>

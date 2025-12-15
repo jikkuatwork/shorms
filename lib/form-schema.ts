@@ -24,7 +24,7 @@ export function generateZodSchema(formFields: FormField[]) {
         fieldSchema = z.boolean()
         break
       case FieldType.DATE:
-        fieldSchema = z.date()
+        fieldSchema = z.coerce.date()
         break
       case FieldType.FILE_UPLOAD:
         fieldSchema = z.any()
@@ -132,8 +132,22 @@ export const generateDefaultValues = (
   const defaultValues: Record<string, any> = {}
 
   formFields.forEach((field) => {
-    if (field.default) {
+    if (field.default !== undefined) {
       defaultValues[field.name] = field.default
+    } else {
+      // Provide type-appropriate defaults to avoid controlled/uncontrolled warnings
+      switch (field.type) {
+        case FieldType.CHECKBOX:
+        case FieldType.SWITCH:
+          defaultValues[field.name] = false
+          break
+        case FieldType.NUMBER_INPUT:
+        case FieldType.SLIDER:
+          defaultValues[field.name] = 0
+          break
+        default:
+          defaultValues[field.name] = ""
+      }
     }
   })
 

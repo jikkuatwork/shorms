@@ -56,11 +56,17 @@ export function renderFormFieldComponent({
   formField,
   field,
 }: RenderFormFieldComponentProps) {
+  // Ensure field value is never undefined to prevent controlled/uncontrolled warnings
+  const safeField = {
+    ...field,
+    value: field.value ?? ""
+  }
+
   switch (formField.type) {
     case FieldType.INPUT:
       return (
         <FormFieldWrapper {...formField}>
-          <Input placeholder={formField.placeholder} {...field} />
+          <Input placeholder={formField.placeholder} {...safeField} />
         </FormFieldWrapper>
       )
     case FieldType.TEXTAREA:
@@ -69,20 +75,20 @@ export function renderFormFieldComponent({
           <Textarea
             placeholder={formField.placeholder}
             className="resize-none"
-            {...field}
+            {...safeField}
           />
         </FormFieldWrapper>
       )
     case FieldType.NUMBER_INPUT:
       return (
         <FormFieldWrapper {...formField}>
-          <Input placeholder={formField.placeholder} {...field} type="number" />
+          <Input placeholder={formField.placeholder} {...safeField} type="number" />
         </FormFieldWrapper>
       )
     case FieldType.EMAIL:
       return (
         <FormFieldWrapper {...formField}>
-          <Input placeholder={formField.placeholder} {...field} />
+          <Input placeholder={formField.placeholder} {...safeField} />
         </FormFieldWrapper>
       )
     case FieldType.CHECKBOX:
