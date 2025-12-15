@@ -7,7 +7,28 @@ advanced validation, JSON import/export, and code generation.
 Database and sharing features have been removed to focus on local-first
 development.
 
-## Recent Updates (Session: Dec 15, 2025 - Refinement)
+## Recent Updates (Session: Dec 15, 2025 - Library Refactor Planning)
+
+### Library Refactoring Plan
+- **Created comprehensive refactoring plan** (`koder/plans/02_library-refactor.md`)
+- **Design decisions finalized** for library architecture:
+  - Component naming: Builder, Renderer, Viewer (short, clear names)
+  - State persistence: Memory by default, optional localStorage/sessionStorage
+  - Draft saving: Separate callback with page-level validation
+  - File uploads: Immediate upload via callback (parent controls storage)
+  - Forward compatibility: Graceful degradation for unknown field types
+  - UI refinements: Scheduled after refactoring is complete
+- **Plan includes 7 implementation phases**:
+  1. Testing infrastructure setup
+  2. Dependency upgrades (Zod v4, React 19)
+  3. Schema versioning & backward compatibility
+  4. Monorepo setup (pnpm workspaces)
+  5. Component refactoring (Builder, Renderer, Viewer)
+  6. Documentation
+  7. Testing & validation in Onesource
+- **Status**: Plan complete, ready for execution in fresh session
+
+### Previous Session (Dec 15, 2025 - Refinement)
 
 ### Core Improvements
 - **Field ID System**: Replaced Math.random() with nanoid for collision-resistant unique IDs
@@ -58,25 +79,25 @@ development.
 
 ## Suggestions for Next Session
 
-Based on current state and common form builder features:
+### IMMEDIATE PRIORITY: Library Refactoring
+**Execute the refactoring plan in `koder/plans/02_library-refactor.md`**
 
-### High Priority
+The plan is complete and ready for execution. Start with:
+1. Read `koder/plans/02_library-refactor.md` for full context
+2. Begin with Phase 1: Testing Infrastructure
+3. Follow phases sequentially (each phase has acceptance criteria)
+
+**Goal**: Transform Shorms from standalone app to installable library with exports:
+```typescript
+import { Builder, Renderer, Viewer } from 'shorms'
+```
+
+### Future Enhancements (After Refactoring)
+- **UI Refinements**: Per design decision, do visual polish AFTER refactoring
 - **Conditional Logic**: Show/hide fields based on other field values
 - **Field Duplication**: Quick duplicate button for fields
 - **Undo/Redo**: History management for builder actions
 - **Form Templates**: Pre-built templates for common use cases
-
-### Medium Priority
-- **Field Validation Preview**: Show validation errors in builder preview
-- **Keyboard Shortcuts**: Speed up common operations
-- **Export Options**: CSV, PDF form preview
-- **Cross-field Validation**: Validate relationships between fields
-
-### Low Priority / Nice to Have
-- **Theme Customization**: Custom colors for generated forms
-- **Additional Field Types**: OTP, Phone, Multi-select, Rich text
-- **Accessibility Checker**: Audit forms for WCAG compliance
-- **Version Control**: Track schema changes over time
 
 ## Potential Future Enhancements
 

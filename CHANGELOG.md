@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planning
+- **Library Refactoring Plan** (koder/plans/02_library-refactor.md)
+  - Comprehensive 7-phase plan to transform Shorms into installable library
+  - Design decisions finalized for component API (Builder, Renderer, Viewer)
+  - Strategy for dependency upgrades (Zod v4, React 19)
+  - Monorepo structure with @shorms/core and @shorms/react packages
+  - Forward compatibility strategy for unknown field types
+  - State persistence, draft saving, and file upload patterns defined
+
 ### Added
 - Unique field ID generation using nanoid (collision-resistant)
 - Enhanced validation system:

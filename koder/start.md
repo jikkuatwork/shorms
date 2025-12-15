@@ -7,7 +7,11 @@
   - improved field IDs (nanoid), enhanced validation (min/max length/value, file size)
   - example forms in /examples, LLM integration docs
   - UI polish (header, tabs, spacing, empty states)
-- review koder/NEXT_SESSION.md for current state and potential next steps
+- **CURRENT PRIORITY**: Library refactoring (koder/plans/02_library-refactor.md)
+  - Transform Shorms from app to installable library
+  - Export three components: Builder, Renderer, Viewer
+  - Plan is complete, ready for execution
+- review koder/NEXT_SESSION.md for current state and next steps
 - review the repo and give me a clear summary of what you understood
   before starting/resuming the work
 
