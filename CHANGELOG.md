@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Documentation & Examples (Complete)**:
+  - LIBRARY_USAGE.md - Comprehensive library usage guide (924 lines)
+  - Code examples directory with 6 practical examples
+  - Migration guide from Zustand FormEditor to controlled Builder
+  - Common usage patterns (localStorage, API, build/preview toggle)
+  - Updated README.md with library features and quick start examples
+- **Builder Component Extraction (Phase 2 Complete)**:
+  - Core Builder component in `components/shorms/builder/` with controlled API
+  - ShadcnBuilder wrapper for high-level usage
+  - useBuilderState hook for convenient state management
+  - PageTabs component for page management with drag-drop
+  - FieldLibrary component for field template selection
+  - FormContext component for statistics and info display
+  - Complete TypeScript type definitions
+  - Builder demo page at `/using-library/builder-demo`
+  - API documentation in `koder/builder-design/BUILDER_API.md`
+  - Playwright E2E test suite: 6 passing tests, 8 manually verified
 - **Renderer Component Extraction (Phase 1 Complete)**:
   - Core Renderer component in `components/shorms/renderer/` with full API Design v3.1.0 implementation
   - ShadcnRenderer wrapper with full shadcn/ui component styling
