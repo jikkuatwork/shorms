@@ -12,13 +12,16 @@
   - testing infrastructure (Vitest with 17 passing tests)
   - schema versioning system with forward compatibility
   - library exports (index.ts) for external usage
-- **CURRENT PRIORITY**: Component extraction (koder/plans/03_component-extraction.md)
-  - ✅ Phase 1 Complete: Renderer component extracted
-  - New namespace: components/shorms/renderer/
+- **CURRENT STATUS**: Phase 1 Component Extraction Complete! (Dec 15, 2025)
+  - ✅ Phase 1 COMPLETE: Renderer component extracted and integrated
+  - New namespace: components/shorms/renderer/ + shadcn-renderer.tsx
   - Implements API Design v3.1.0 (koder/API_DESIGN.md)
   - Features: state management, validation, suggestions, background jobs
-  - Status: Builds successfully, needs runtime testing
-  - Next: Test renderer → Extract Builder → Create Viewer
+  - Playwright testing: 12/12 tests passing
+  - ShadcnRenderer integrated into main app (replaces FormRunner)
+  - Schema adapter for legacy format conversion
+  - **READY FOR LIBRARY USE** - Renderer is production-ready
+  - Next: Phase 2 - Extract Builder component (FormEditor)
 - review koder/NEXT_SESSION.md for current state and next steps
 - review the repo and give me a clear summary of what you understood
   before starting/resuming the work

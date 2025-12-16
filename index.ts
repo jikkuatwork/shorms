@@ -75,6 +75,7 @@ export {
  * For the new API types, import from '@/components/shorms/renderer' or see API_DESIGN.md
  */
 export { Renderer } from './components/shorms/renderer'
+export { ShadcnRenderer } from './components/shorms/shadcn-renderer'
 export type {
   // Note: These types from the new renderer may conflict with legacy types above
   // Use qualified imports if needed: import type { FormField as RendererFormField } from '@/components/shorms/renderer'
@@ -83,7 +84,24 @@ export type {
   FieldSuggestionState,
   BulkSuggestResponse,
   BackgroundJob,
+  ShormsSchema,
+  FormValues,
 } from './components/shorms/renderer'
+
+// ============================================================================
+// Schema Adapters
+// ============================================================================
+
+/**
+ * Schema adapter utilities for converting between legacy and new formats
+ *
+ * - formPagesToSchema: Convert legacy FormPage[] to new ShormsSchema
+ * - schemaToFormPages: Convert new ShormsSchema to legacy FormPage[]
+ */
+export {
+  formPagesToSchema,
+  schemaToFormPages,
+} from './lib/schema-adapter'
 
 /**
  * Planned additional exports:

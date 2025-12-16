@@ -119,9 +119,15 @@ export const Renderer = React.forwardRef<any, RendererProps>((props, ref) => {
   }, [suggestions])
 
   // Handler: Field value change
-  const handleFieldChange = useCallback(async (fieldId: string, value: any) => {
+  const handleFieldChange = useCallback(async (fieldId: string, value: any, fieldType?: string) => {
+    // Convert value based on field type
+    let convertedValue = value
+    if (fieldType === 'number' && value !== '' && value !== null) {
+      convertedValue = Number(value)
+    }
+
     // Update value in state
-    formState.setValue(fieldId, value, 'user')
+    formState.setValue(fieldId, convertedValue, 'user')
 
     // Run validation
     const validationResult = await validation.validateFieldDebounced(fieldId)
@@ -240,13 +246,27 @@ export const Renderer = React.forwardRef<any, RendererProps>((props, ref) => {
           <p className="text-sm text-muted-foreground">{field.description}</p>
         )}
 
-        <input
-          id={field.name}
-          type="text"
-          value={value || ''}
-          onChange={(e) => handleFieldChange(field.name, e.target.value)}
-          className="w-full px-3 py-2 border rounded-md"
-        />
+        {field.type === 'textarea' ? (
+          <textarea
+            id={field.name}
+            name={field.name}
+            value={value || ''}
+            onChange={(e) => handleFieldChange(field.name, e.target.value, field.type)}
+            className="w-full px-3 py-2 border rounded-md"
+            required={field.required}
+            rows={4}
+          />
+        ) : (
+          <input
+            id={field.name}
+            name={field.name}
+            type={field.type === 'email' ? 'email' : field.type === 'number' ? 'number' : 'text'}
+            value={value || ''}
+            onChange={(e) => handleFieldChange(field.name, e.target.value, field.type)}
+            className="w-full px-3 py-2 border rounded-md"
+            required={field.required}
+          />
+        )}
 
         {/* Validation error */}
         {formState.errors[field.name] && (

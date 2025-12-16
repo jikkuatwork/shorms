@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Renderer Component Extraction (Phase 1 Complete)**:
+  - Core Renderer component in `components/shorms/renderer/` with full API Design v3.1.0 implementation
+  - ShadcnRenderer wrapper with full shadcn/ui component styling
+  - Schema adapter utilities for legacy format conversion (`lib/schema-adapter.ts`)
+  - Playwright E2E testing infrastructure with 12 comprehensive tests
+  - Integrated ShadcnRenderer into main app (replaces FormRunner in preview dialog)
+- **Testing Infrastructure**:
+  - Playwright configuration and test suite
+  - Automated browser testing for all renderer features
+  - Test coverage: rendering, validation, navigation, submission
+- **Library Exports**:
+  - Exported `Renderer` and `ShadcnRenderer` components
+  - Exported `formPagesToSchema` and `schemaToFormPages` adapters
+  - All TypeScript types for library usage
+
+### Changed
+- Form preview dialog now uses ShadcnRenderer instead of FormRunner
+- Updated index.ts with complete renderer exports
+
+### Fixed
+- Number field validation now properly converts string values to numbers
+- Added missing `name` attributes to form inputs for proper form handling
+- Textarea fields now render correctly instead of as text inputs
+- Field type attributes properly mapped (email, number types)
+
 ## [0.2.0] - 2025-12-15
 
 ### Library-Ready Beta Release
