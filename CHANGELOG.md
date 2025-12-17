@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Library Demo Page Enhancements (2025-12-17)**:
+  - Rebuilt `/using-library/` page with full Builder integration
+  - ControlledFieldCommandPalette component for controlled state management
+  - All navbar controls: Run Form, View, Clear, Export, Import, Theme toggle
+  - Enhanced form submission toast showing data preview (first 3 fields)
+  - Responsive button labels (icons-only on small screens, text on large)
+  - Command palette button correctly positioned in PageTabs area
+  - renderCommandPalette prop for Builder/PageTabs customization
 - **Viewer Component Extraction (Phase 3 Complete)**:
   - Core Viewer component in `components/shorms/viewer/` with read-only display
   - ShadcnViewer wrapper with export and print functionality
@@ -50,10 +58,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - All TypeScript types for library usage
 
 ### Changed
+- `/using-library/` page now mirrors root page functionality exactly
+- ShadcnRenderer buttons now properly styled with shadcn/ui classes
+- Command palette integrated into Builder PageTabs (not separate navbar button)
+- Form submission toast enhanced with actual field data display
 - Form preview dialog now uses ShadcnRenderer instead of FormRunner
 - Updated index.ts with complete renderer exports
 
 ### Fixed
+- Command palette button positioning in PageTabs (was missing in SM/MD modes)
+- ShadcnRenderer navigation buttons styling (Previous/Next/Submit)
+- Navbar overflow on small screens (made button text responsive)
 - Number field validation now properly converts string values to numbers
 - Added missing `name` attributes to form inputs for proper form handling
 - Textarea fields now render correctly instead of as text inputs
