@@ -213,7 +213,7 @@ export default function Home() {
                 <div className="hidden sm:block text-left">
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm font-semibold">Shorms</span>
-                    <span className="rounded bg-muted px-1 py-0.5 text-[10px] font-medium text-muted-foreground">
+                    <span className="text-[10px] font-medium text-emerald-500 drop-shadow-[0_0_3px_rgba(16,185,129,0.5)]">
                       v{VERSION}
                     </span>
                   </div>
