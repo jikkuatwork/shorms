@@ -1,7 +1,7 @@
 # Shorms Library Usage Guide
 
-**Version:** 1.0.0
-**Last Updated:** 2025-12-16
+**Version:** 0.3.0
+**Last Updated:** 2025-12-17
 
 This guide covers how to use the Shorms library components (Builder, Renderer, and utilities) in your React applications.
 
@@ -56,8 +56,8 @@ yarn add shorms
 The library components are already available:
 
 ```typescript
-import { ShadcnBuilder, useBuilderState } from '@/components/shorms/builder'
-import { ShadcnRenderer } from '@/components/shorms/shadcn-renderer'
+import { Builder, useBuilderState } from '@/components/shorms/builder'
+import { Renderer } from '@/components/shorms/shadcn-renderer'
 ```
 
 ---
@@ -71,7 +71,7 @@ Create a form builder with drag-and-drop and page management:
 ```typescript
 'use client'
 
-import { ShadcnBuilder, useBuilderState } from 'shorms'
+import { Builder, useBuilderState } from 'shorms'
 
 export default function MyFormBuilder() {
   const builder = useBuilderState()
@@ -83,7 +83,7 @@ export default function MyFormBuilder() {
 
   return (
     <div className="h-screen">
-      <ShadcnBuilder
+      <Builder
         pages={builder.pages}
         activePageId={builder.activePageId}
         onPagesChange={builder.setPages}
@@ -109,7 +109,7 @@ Render a form with validation and multi-page support:
 ```typescript
 'use client'
 
-import { ShadcnRenderer } from 'shorms'
+import { Renderer } from 'shorms'
 
 export default function MyFormRenderer() {
   const handleSubmit = (data: Record<string, any>) => {
@@ -118,7 +118,7 @@ export default function MyFormRenderer() {
   }
 
   return (
-    <ShadcnRenderer
+    <Renderer
       pages={formPages}
       onSubmit={handleSubmit}
       submitButtonText="Submit Form"
@@ -214,18 +214,18 @@ function MyBuilder() {
 }
 ```
 
-#### Using ShadcnBuilder Wrapper
+#### Using Builder Wrapper
 
-The `ShadcnBuilder` component includes shadcn/ui styling and preset configurations:
+The `Builder` component includes shadcn/ui styling and preset configurations:
 
 ```typescript
-import { ShadcnBuilder, useBuilderState } from 'shorms'
+import { Builder, useBuilderState } from 'shorms'
 
 function MyBuilder() {
   const builder = useBuilderState()
 
   return (
-    <ShadcnBuilder
+    <Builder
       {...builder}
       width="full"
     />
@@ -277,10 +277,10 @@ function MyFormRenderer() {
 }
 ```
 
-#### Using ShadcnRenderer Wrapper
+#### Using Renderer Wrapper
 
 ```typescript
-import { ShadcnRenderer } from 'shorms'
+import { Renderer } from 'shorms'
 
 function MyFormRenderer() {
   const handleSubmit = (data: Record<string, any>) => {
@@ -288,7 +288,7 @@ function MyFormRenderer() {
   }
 
   return (
-    <ShadcnRenderer
+    <Renderer
       pages={formPages}
       onSubmit={handleSubmit}
       submitButtonText="Submit"
@@ -315,7 +315,7 @@ function MyFormRenderer() {
 ### Pattern 1: Saving to localStorage
 
 ```typescript
-import { ShadcnBuilder, useBuilderState } from 'shorms'
+import { Builder, useBuilderState } from 'shorms'
 import { useEffect } from 'react'
 
 function MyBuilder() {
@@ -334,14 +334,14 @@ function MyBuilder() {
     localStorage.setItem('my-form', JSON.stringify(builder.pages))
   }, [builder.pages])
 
-  return <ShadcnBuilder {...builder} />
+  return <Builder {...builder} />
 }
 ```
 
 ### Pattern 2: Loading from API
 
 ```typescript
-import { ShadcnBuilder, useBuilderState } from 'shorms'
+import { Builder, useBuilderState } from 'shorms'
 import { useEffect, useState } from 'react'
 
 function MyBuilder() {
@@ -360,7 +360,7 @@ function MyBuilder() {
 
   if (loading) return <div>Loading...</div>
 
-  return <ShadcnBuilder {...builder} />
+  return <Builder {...builder} />
 }
 ```
 
@@ -401,7 +401,7 @@ function MyBuilder() {
 ### Pattern 4: Building and Rendering
 
 ```typescript
-import { ShadcnBuilder, ShadcnRenderer, useBuilderState } from 'shorms'
+import { Builder, Renderer, useBuilderState } from 'shorms'
 import { useState } from 'react'
 
 function MyApp() {
@@ -412,7 +412,7 @@ function MyApp() {
     return (
       <div>
         <button onClick={() => setMode('preview')}>Preview</button>
-        <ShadcnBuilder {...builder} />
+        <Builder {...builder} />
       </div>
     )
   }
@@ -420,7 +420,7 @@ function MyApp() {
   return (
     <div>
       <button onClick={() => setMode('build')}>Edit</button>
-      <ShadcnRenderer
+      <Renderer
         pages={builder.pages}
         onSubmit={(data) => console.log('Submitted:', data)}
       />
@@ -593,13 +593,13 @@ The FormEditor component used Zustand store internally:
 // app/page.tsx
 'use client'
 
-import { ShadcnBuilder, useBuilderState } from 'shorms'
+import { Builder, useBuilderState } from 'shorms'
 
 export default function HomePage() {
   const builder = useBuilderState()
 
   return (
-    <ShadcnBuilder
+    <Builder
       pages={builder.pages}
       activePageId={builder.activePageId}
       onPagesChange={builder.setPages}
@@ -632,7 +632,7 @@ Benefits:
    import { FormEditor } from '@/components/form-editor'
 
    // After
-   import { ShadcnBuilder, useBuilderState } from 'shorms'
+   import { Builder, useBuilderState } from 'shorms'
    ```
 
 2. **Add state management:**
@@ -647,7 +647,7 @@ Benefits:
    <FormEditor width="full" />
 
    // After
-   <ShadcnBuilder {...builder} width="full" />
+   <Builder {...builder} width="full" />
    ```
 
 4. **Add persistence (if needed):**
@@ -675,7 +675,7 @@ Benefits:
 ```typescript
 'use client'
 
-import { ShadcnBuilder, useBuilderState, FieldType } from 'shorms'
+import { Builder, useBuilderState, FieldType } from 'shorms'
 import { useEffect } from 'react'
 
 export default function ContactFormBuilder() {
@@ -712,7 +712,7 @@ export default function ContactFormBuilder() {
     }])
   }, [])
 
-  return <ShadcnBuilder {...builder} width="lg" />
+  return <Builder {...builder} width="lg" />
 }
 ```
 
@@ -721,7 +721,7 @@ export default function ContactFormBuilder() {
 ```typescript
 'use client'
 
-import { ShadcnBuilder, useBuilderState, FieldType } from 'shorms'
+import { Builder, useBuilderState, FieldType } from 'shorms'
 import { useEffect } from 'react'
 
 export default function RegistrationBuilder() {
@@ -784,7 +784,7 @@ export default function RegistrationBuilder() {
     ])
   }, [])
 
-  return <ShadcnBuilder {...builder} width="full" />
+  return <Builder {...builder} width="full" />
 }
 ```
 
@@ -793,7 +793,7 @@ export default function RegistrationBuilder() {
 ```typescript
 'use client'
 
-import { ShadcnBuilder, useBuilderState } from 'shorms'
+import { Builder, useBuilderState } from 'shorms'
 import { useState } from 'react'
 
 export default function APIFormBuilder() {
@@ -837,7 +837,7 @@ export default function APIFormBuilder() {
         </button>
       </div>
       <div className="flex-1">
-        <ShadcnBuilder {...builder} width="full" />
+        <Builder {...builder} width="full" />
       </div>
     </div>
   )

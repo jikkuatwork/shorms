@@ -7,7 +7,7 @@
 
 'use client'
 
-import { ShadcnBuilder, useBuilderState, type FormPage } from '@/index'
+import { Builder, useBuilderState, type FormPage } from '@/index'
 import { useState } from 'react'
 
 // Example: Import a contact form schema
@@ -101,7 +101,7 @@ export default function LoadSchemaExample() {
 
       {/* Builder */}
       <div className="flex-1">
-        <ShadcnBuilder
+        <Builder
           pages={builder.pages}
           activePageId={builder.activePageId}
           onPagesChange={builder.setPages}

@@ -7,7 +7,7 @@
 
 'use client'
 
-import { ShadcnBuilder, useBuilderState, type FormPage } from '@/index'
+import { Builder, useBuilderState, type FormPage } from '@/index'
 import { useEffect, useState } from 'react'
 
 // Mock API endpoints (replace with your actual API)
@@ -216,7 +216,7 @@ export default function WithAPIExample() {
 
       {/* Builder */}
       <div className="flex-1">
-        <ShadcnBuilder
+        <Builder
           pages={builder.pages}
           activePageId={builder.activePageId}
           onPagesChange={builder.setPages}

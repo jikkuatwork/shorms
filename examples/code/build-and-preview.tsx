@@ -8,8 +8,8 @@
 'use client'
 
 import {
-  ShadcnBuilder,
-  ShadcnRenderer,
+  Builder,
+  Renderer,
   useBuilderState,
   type FormPage
 } from '@/index'
@@ -166,7 +166,7 @@ export default function BuildAndPreviewExample() {
 
           {/* Builder */}
           <div className="flex-1">
-            <ShadcnBuilder
+            <Builder
               pages={builder.pages}
               activePageId={builder.activePageId}
               onPagesChange={builder.setPages}
@@ -194,7 +194,7 @@ export default function BuildAndPreviewExample() {
           <div className="flex-1 overflow-auto bg-gray-50 p-8">
             <div className="max-w-4xl mx-auto">
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <ShadcnRenderer
+                <Renderer
                   pages={builder.pages}
                   onSubmit={handleSubmit}
                   submitButtonText="Submit Form"

@@ -7,7 +7,7 @@
 
 'use client'
 
-import { ShadcnBuilder, useBuilderState, type FormPage } from '@/index'
+import { Builder, useBuilderState, type FormPage } from '@/index'
 import { useEffect, useState } from 'react'
 
 const STORAGE_KEY = 'shorms-builder-state'
@@ -159,7 +159,7 @@ export default function WithLocalStorageExample() {
 
       {/* Builder */}
       <div className="flex-1">
-        <ShadcnBuilder
+        <Builder
           pages={builder.pages}
           activePageId={builder.activePageId}
           onPagesChange={builder.setPages}

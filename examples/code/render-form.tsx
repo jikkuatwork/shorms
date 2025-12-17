@@ -1,13 +1,13 @@
 /**
  * Render Form Example
  *
- * Demonstrates how to render a form with the ShadcnRenderer component.
+ * Demonstrates how to render a form with the Renderer component.
  * Includes handling form submission and displaying results.
  */
 
 'use client'
 
-import { ShadcnRenderer, type FormPage } from '@/index'
+import { Renderer, type FormPage } from '@/index'
 import { useState } from 'react'
 
 // Example: Import a feedback survey schema
@@ -79,7 +79,7 @@ export default function RenderFormExample() {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <ShadcnRenderer
+          <Renderer
             pages={feedbackSurvey.pages as FormPage[]}
             onSubmit={handleSubmit}
             submitButtonText="Submit Feedback"

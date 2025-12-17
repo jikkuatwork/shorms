@@ -5,6 +5,30 @@ All notable changes to Shorms will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-12-17
+
+### Changed
+- **API Simplification**: Default exports are now shadcn-styled components
+  - `Builder` (was `ShadcnBuilder`)
+  - `Renderer` (was `ShadcnRenderer`)
+  - `Viewer` (was `ShadcnViewer`)
+- **Headless namespace** for custom UI implementations: `Headless.Builder`, `Headless.Renderer`, `Headless.Viewer`
+
+### Removed
+- **Legacy code cleanup**: Removed 36 files (~6,900 lines) of legacy code
+  - `app/original/` - Old Zustand-based version (preserved in `legacy` branch)
+  - `app/test-renderer/` - Replaced by `/using-library/` demos
+  - 20 legacy components (form-editor, sidebars, code-gen, etc.)
+  - Old documentation (COMPONENT_API.md, LLM_INTEGRATION.md)
+  - Internal dev files (koder/plans, screenshots, session notes)
+
+### Documentation
+- Updated all docs and examples to use new API names
+- Added "Updating" section to README for consumers
+- Simplified README for library focus
+
+---
+
 ## [Unreleased]
 
 ### Added

@@ -7,7 +7,7 @@
 
 'use client'
 
-import { ShadcnBuilder, useBuilderState } from '@/index'
+import { Builder, useBuilderState } from '@/index'
 
 export default function BasicBuilderExample() {
   // Initialize builder with default state
@@ -43,7 +43,7 @@ export default function BasicBuilderExample() {
 
       {/* Builder component */}
       <div className="flex-1">
-        <ShadcnBuilder
+        <Builder
           pages={builder.pages}
           activePageId={builder.activePageId}
           onPagesChange={builder.setPages}
