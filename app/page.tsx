@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Book, ChevronDown, Download, Eye, History, Play, Trash2, Upload } from 'lucide-react'
+import { Book, ChevronDown, Download, Eye, Github, History, Play, Trash2, Upload } from 'lucide-react'
 import Link from 'next/link'
 import { VERSION } from '@/lib/version'
 import { useToast } from '@/hooks/use-toast'
@@ -222,23 +222,33 @@ export default function Home() {
                 <ChevronDown className="size-3.5 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
+            <DropdownMenuContent align="start" className="w-56">
               <DropdownMenuItem asChild>
-                <Link href="/docs" className="gap-2">
-                  <Book className="size-4" />
-                  Documentation
+                <Link href="/docs" className="flex items-start gap-2">
+                  <Book className="size-4 mt-0.5" />
+                  <div>
+                    <div className="font-medium">Docs</div>
+                    <div className="text-xs text-muted-foreground">Library usage guide</div>
+                  </div>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/changelog" className="gap-2">
-                  <History className="size-4" />
-                  Changelog
+                <Link href="/changelog" className="flex items-start gap-2">
+                  <History className="size-4 mt-0.5" />
+                  <div>
+                    <div className="font-medium">Changelog</div>
+                    <div className="text-xs text-muted-foreground">Version history</div>
+                  </div>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <a href="https://github.com/jikkuatwork/shorms" target="_blank" rel="noopener noreferrer" className="gap-2">
-                  GitHub
+                <a href="https://github.com/jikkuatwork/shorms" target="_blank" rel="noopener noreferrer" className="flex items-start gap-2">
+                  <Github className="size-4 mt-0.5" />
+                  <div>
+                    <div className="font-medium">GitHub</div>
+                    <div className="text-xs text-muted-foreground">View source code</div>
+                  </div>
                 </a>
               </DropdownMenuItem>
             </DropdownMenuContent>

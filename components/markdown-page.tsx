@@ -4,9 +4,19 @@ import * as React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { codeToHtml } from 'shiki'
-import { ArrowLeft, Check, Copy, FileText } from 'lucide-react'
+import { Book, Check, ChevronDown, Copy, Github, History } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Logo } from '@/components/logo'
+import { ModeToggle } from '@/components/mode-toggle'
+import { VERSION } from '@/lib/version'
 import { cn } from '@/lib/utils'
 
 function CodeBlock({ className, children }: { className?: string; children?: React.ReactNode }) {
@@ -82,37 +92,80 @@ export function MarkdownPage({ content, filename, title, description }: Markdown
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-6">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" asChild className="h-8 w-8">
+          {/* Left: Logo + Nav dropdown */}
+          <div className="flex items-center gap-1">
+            {/* Logo - links to home */}
+            <Button variant="ghost" size="icon" asChild className="h-9 w-9">
               <Link href="/">
-                <ArrowLeft className="h-4 w-4" />
+                <div className="flex aspect-square size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                  <Logo className="size-3.5" />
+                </div>
               </Link>
             </Button>
-            <div className="h-6 w-px bg-border" />
-            <FileText className="h-5 w-5 text-muted-foreground" />
-            <div>
-              <h1 className="text-sm font-semibold">{title}</h1>
-              <p className="text-xs text-muted-foreground">{filename}</p>
-            </div>
+
+            {/* Nav dropdown - segment button style */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-9 gap-1 px-2">
+                  <span className="text-sm font-medium">{title}</span>
+                  <ChevronDown className="size-3.5 text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuItem asChild>
+                  <Link href="/docs" className="flex items-start gap-2">
+                    <Book className="size-4 mt-0.5" />
+                    <div>
+                      <div className="font-medium">Docs</div>
+                      <div className="text-xs text-muted-foreground">Library usage guide</div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/changelog" className="flex items-start gap-2">
+                    <History className="size-4 mt-0.5" />
+                    <div>
+                      <div className="font-medium">Changelog</div>
+                      <div className="text-xs text-muted-foreground">Version history</div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <a href="https://github.com/jikkuatwork/shorms" target="_blank" rel="noopener noreferrer" className="flex items-start gap-2">
+                    <Github className="size-4 mt-0.5" />
+                    <div>
+                      <div className="font-medium">GitHub</div>
+                      <div className="text-xs text-muted-foreground">View source code</div>
+                    </div>
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCopy}
-            className="gap-2"
-          >
-            {copied ? (
-              <>
-                <Check className="h-4 w-4" />
-                Copied
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4" />
-                Copy Markdown
-              </>
-            )}
-          </Button>
+
+          {/* Right: Copy button + Theme toggle */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopy}
+              className="gap-2"
+            >
+              {copied ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  <span className="hidden sm:inline">Copy</span>
+                </>
+              )}
+            </Button>
+            <ModeToggle />
+          </div>
         </div>
       </header>
 
