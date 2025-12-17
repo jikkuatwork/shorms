@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Book, Download, Eye, History, Play, SearchCode, Trash2, Upload } from 'lucide-react'
+import { Book, ChevronDown, Download, Eye, History, Play, Trash2, Upload } from 'lucide-react'
 import Link from 'next/link'
 import { VERSION } from '@/lib/version'
 import { useToast } from '@/hooks/use-toast'
@@ -22,6 +22,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
@@ -194,64 +201,73 @@ export default function Home() {
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
-      <header className="z-10 flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-background px-4 md:gap-4 md:px-6">
-        <div className="flex flex-1 items-center gap-2 overflow-hidden md:gap-3">
-          <div className="flex items-center gap-2">
-            <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Logo className="size-4" />
-            </div>
-            <span className="hidden text-sm font-semibold sm:inline">
-              Shorms
-            </span>
-            <span className="hidden rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline">
-              v{VERSION}
-            </span>
-          </div>
-          <div className="hidden h-6 w-px bg-border sm:block" />
-          <nav className="hidden items-center gap-1 md:flex">
-            <Button variant="ghost" size="sm" asChild className="h-8 gap-1.5 px-2 text-xs">
-              <Link href="/docs">
-                <Book className="size-3.5" />
-                Docs
-              </Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild className="h-8 gap-1.5 px-2 text-xs">
-              <Link href="/changelog">
-                <History className="size-3.5" />
-                Changelog
-              </Link>
-            </Button>
-          </nav>
-          <div className="hidden h-6 w-px bg-border md:block" />
-          <div className="hidden sm:block">
-            <h1 className="text-lg font-semibold">Form Builder</h1>
-            <p className="hidden text-xs text-muted-foreground md:block">
-              Design and preview your forms
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-1.5 md:gap-2">
-          <div className="hidden items-center gap-1 rounded-md border p-1 sm:flex">
-            {sizes.map((size) => (
-              <Button
-                key={size.value}
-                variant={width === size.value ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setWidth(size.value)}
-                className="h-7 px-3 text-xs"
-              >
-                {size.label}
+      <header className="z-10 flex h-14 shrink-0 items-center justify-between gap-3 border-b bg-background px-4">
+        {/* Left: Logo with dropdown */}
+        <div className="flex items-center gap-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="gap-2 px-2">
+                <div className="flex aspect-square size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                  <Logo className="size-3.5" />
+                </div>
+                <div className="hidden sm:block text-left">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-semibold">Shorms</span>
+                    <span className="rounded bg-muted px-1 py-0.5 text-[10px] font-medium text-muted-foreground">
+                      v{VERSION}
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-muted-foreground">Shadcn Form Builder</span>
+                </div>
+                <ChevronDown className="size-3.5 text-muted-foreground" />
               </Button>
-            ))}
-          </div>
-          <Separator orientation="vertical" className="hidden h-6 sm:block" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              <DropdownMenuItem asChild>
+                <Link href="/docs" className="gap-2">
+                  <Book className="size-4" />
+                  Documentation
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/changelog" className="gap-2">
+                  <History className="size-4" />
+                  Changelog
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <a href="https://github.com/jikkuatwork/shorms" target="_blank" rel="noopener noreferrer" className="gap-2">
+                  GitHub
+                </a>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
-          {/* Run Form */}
+        {/* Center: Size selector */}
+        <div className="hidden items-center rounded-md border p-0.5 md:flex">
+          {sizes.map((size) => (
+            <Button
+              key={size.value}
+              variant={width === size.value ? 'secondary' : 'ghost'}
+              size="sm"
+              onClick={() => setWidth(size.value)}
+              className="h-7 px-2.5 text-xs"
+            >
+              {size.label}
+            </Button>
+          ))}
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex items-center gap-1.5">
+          {/* Primary actions */}
           <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" variant="default" className="gap-2" title="Run Form">
-                <Play className="size-4" />
-                <span className="hidden lg:inline">Run Form</span>
+              <Button size="sm" className="gap-1.5" title="Run Form">
+                <Play className="size-3.5" />
+                <span className="hidden sm:inline">Run</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="flex h-[80vh] max-w-3xl flex-col p-0">
@@ -262,20 +278,17 @@ export default function Home() {
                 <ShadcnRenderer
                   schema={schema}
                   onSubmit={handleSubmit}
-                  features={{
-                    stateManagement: true,
-                  }}
+                  features={{ stateManagement: true }}
                 />
               </ScrollArea>
             </DialogContent>
           </Dialog>
 
-          {/* View Button */}
           <Dialog open={viewerOpen} onOpenChange={setViewerOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="gap-2" title="View Schema">
-                <Eye className="size-4" />
-                <span className="hidden lg:inline">View</span>
+              <Button size="sm" variant="outline" className="gap-1.5" title="View Schema">
+                <Eye className="size-3.5" />
+                <span className="hidden sm:inline">View</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="flex h-[80vh] max-w-4xl flex-col p-0">
@@ -289,64 +302,61 @@ export default function Home() {
                   showValidation={true}
                   showFieldTypes={true}
                   showPageNavigation={true}
-                  metadata={{
-                    title: 'Form Schema',
-                    createdAt: new Date().toISOString(),
-                  }}
+                  metadata={{ title: 'Form Schema', createdAt: new Date().toISOString() }}
                 />
               </ScrollArea>
             </DialogContent>
           </Dialog>
 
+          <Separator orientation="vertical" className="h-5" />
+
+          {/* File actions - segmented */}
+          <div className="flex items-center rounded-md border">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleExport}
+              title="Export JSON"
+              className="h-8 rounded-r-none border-r px-2"
+            >
+              <Download className="size-3.5" />
+            </Button>
+            <Dialog open={importOpen} onOpenChange={setImportOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="ghost" title="Import JSON" className="h-8 rounded-l-none px-2">
+                  <Upload className="size-3.5" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Import Schema</DialogTitle>
+                  <DialogDescription>
+                    Select a JSON file to import.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <Input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json,application/json"
+                    onChange={handleFileChange}
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
           <Button
             size="sm"
-            variant="outline"
+            variant="ghost"
             onClick={handleClear}
             title="Clear Form"
-            className="gap-2"
+            className="h-8 px-2"
           >
-            <Trash2 className="size-4" />
-            <span className="hidden lg:inline">Clear</span>
+            <Trash2 className="size-3.5" />
           </Button>
 
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleExport}
-            title="Export Schema"
-            className="gap-2"
-          >
-            <Download className="size-4" />
-            <span className="hidden lg:inline">Export</span>
-          </Button>
-
-          <Dialog open={importOpen} onOpenChange={setImportOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" variant="outline" title="Import Schema" className="gap-2">
-                <Upload className="size-4" />
-                <span className="hidden lg:inline">Import</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
-              <DialogHeader>
-                <DialogTitle>Import Schema</DialogTitle>
-                <DialogDescription>
-                  Select a JSON file to import. The form will load
-                  automatically.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <Input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".json,application/json"
-                  onChange={handleFileChange}
-                />
-              </div>
-            </DialogContent>
-          </Dialog>
-
-          <Separator orientation="vertical" className="hidden h-6 sm:block" />
+          <Separator orientation="vertical" className="h-5" />
           <ModeToggle />
         </div>
       </header>
