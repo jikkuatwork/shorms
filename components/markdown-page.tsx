@@ -219,8 +219,8 @@ export function MarkdownPage({ content, filename, title, description }: Markdown
               pre({ children, node }) {
                 // Get the code element's props
                 const codeChild = React.Children.toArray(children)[0]
-                if (React.isValidElement(codeChild)) {
-                  const { className, children: codeContent } = codeChild.props
+                if (React.isValidElement(codeChild) && codeChild.props) {
+                  const { className, children: codeContent } = codeChild.props as any
                   return <CodeBlock className={className}>{codeContent}</CodeBlock>
                 }
                 return <pre>{children}</pre>

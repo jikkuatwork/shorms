@@ -52,6 +52,7 @@ export function Builder({
   onFieldAdd,
   onFieldUpdate,
   onFieldDelete,
+  onFieldEdit,
   onFieldReorder,
   width = 'lg',
   showFieldLibrary,
@@ -239,6 +240,8 @@ export function Builder({
                           formField={formField}
                           form={form}
                           key={formField.name}
+                          onDelete={onFieldDelete}
+                          onEdit={onFieldEdit}
                         />
                       ))}
                     </SortableContext>
@@ -265,7 +268,7 @@ export function Builder({
                 className="mx-auto flex w-full max-w-2xl flex-col gap-5 px-4 py-8 md:gap-6 md:px-8 md:py-10"
               >
                 {currentFields.map((formField) => (
-                  <Field formField={formField} key={formField.name} />
+                  <Field formField={formField} key={formField.name} onDelete={onFieldDelete} onEdit={onFieldEdit} />
                 ))}
                 <Button type="submit" size="lg" className="mt-2">
                   Submit Form

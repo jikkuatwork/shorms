@@ -52,6 +52,7 @@ export interface BuilderProps {
   onFieldAdd?: (field: FormField) => void
   onFieldUpdate?: (fieldId: string, updates: Partial<FormField>) => void
   onFieldDelete?: (fieldId: string) => void
+  onFieldEdit?: (fieldId: string) => void
   onFieldReorder?: (pageId: string, fields: FormField[]) => void
 
   // Optional: UI configuration

@@ -18,6 +18,8 @@ export interface FieldProps {
   form?: UseFormReturn<any>
   style?: React.CSSProperties
   isDragging?: boolean
+  onDelete?: (fieldId: string) => void
+  onEdit?: (fieldId: string) => void
 }
 
 const selector = (state: FormState) => ({
@@ -27,9 +29,28 @@ const selector = (state: FormState) => ({
 })
 
 export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
-  ({ formField, form, style, isDragging, ...props }, ref) => {
+  ({ formField, form, style, isDragging, onDelete, onEdit, ...props }, ref) => {
     const { deleteFormField, setSelectedFormField, setIsEditFormFieldOpen } =
       useFormStore(useShallow(selector))
+
+    const handleDelete = () => {
+      if (!formField.id) return
+      if (onDelete) {
+        onDelete(formField.id)
+      } else {
+        deleteFormField(formField.id)
+      }
+    }
+
+    const handleEdit = () => {
+      if (!formField.id) return
+      if (onEdit) {
+        onEdit(formField.id)
+      } else {
+        setSelectedFormField(formField.id)
+        setIsEditFormFieldOpen(true)
+      }
+    }
 
     return (
       <div
@@ -47,10 +68,7 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
             <Button
               size="icon"
               variant="secondary"
-              onClick={() => {
-                setSelectedFormField(formField.id)
-                setIsEditFormFieldOpen(true)
-              }}
+              onClick={handleEdit}
               type="button"
               className="h-8 w-8 hover:bg-primary hover:text-primary-foreground"
             >
@@ -61,7 +79,7 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
             <Button
               size="icon"
               variant="secondary"
-              onClick={() => deleteFormField(formField.id)}
+              onClick={handleDelete}
               type="button"
               className="h-8 w-8 hover:bg-destructive hover:text-destructive-foreground"
             >

@@ -5,6 +5,37 @@ All notable changes to Shorms will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2025-12-18
+
+### Added
+- **Field editing panel**: Added edit functionality with side sheet panel for field configuration
+  - Label, name, description editing
+  - Field-specific settings (placeholder, default values, choices for selects/radios/combobox)
+  - Validation settings (required, min/max, regex, custom error messages)
+  - File size limits for file upload fields
+- **Syntax highlighting**: Added Shiki-based code highlighting to documentation pages
+  - GitHub light/dark themes with automatic switching
+  - Copy-to-clipboard button on hover
+  - Support for all common programming languages
+
+### Changed
+- **Logo**: Updated to use `currentColor` for proper light/dark mode rendering
+- **Navigation**: Enhanced docs/changelog page headers with consistent layout
+  - Logo button links to home
+  - Dropdown menu with descriptions (Docs, Changelog, GitHub)
+  - Theme toggle on all pages
+- **Field descriptions**: Standardized to under 30 characters for sidebar/command palette
+  - Input: "Single line text entry"
+  - Textarea: "Multi-line text entry"
+  - Select: "Dropdown selection"
+  - etc.
+- **Dropdown menus**: Added icons and descriptions to navigation dropdowns
+
+### Fixed
+- **Delete functionality**: Fixed field delete button not working in controlled mode
+  - Added `onDelete` callback prop propagation through Field → SortableField → Builder
+  - Falls back to Zustand store when callback not provided (backward compatible)
+
 ## [0.3.0] - 2025-12-17
 
 ### Changed

@@ -40,6 +40,7 @@ import { defaultFieldTemplates } from '@/components/shorms/builder/constants'
 import { ShadcnRenderer } from '@/components/shorms/shadcn-renderer'
 import { ShadcnViewer } from '@/components/shorms/shadcn-viewer'
 import { ControlledFieldCommandPalette } from '@/components/controlled-field-command-palette'
+import { EditFormField } from '@/components/edit-form-field'
 import { formPagesToSchema } from '@/lib/schema-adapter'
 import { generateFieldId, generateFieldName } from '@/lib/utils'
 import type { FormPage } from '@/components/shorms/builder/types'
@@ -54,6 +55,8 @@ export default function Home() {
   const [viewerOpen, setViewerOpen] = React.useState(false)
   const [importOpen, setImportOpen] = React.useState(false)
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
+  const [editFieldId, setEditFieldId] = React.useState<string | null>(null)
+  const [editPanelOpen, setEditPanelOpen] = React.useState(false)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const builderState = useBuilderState()
@@ -75,6 +78,28 @@ export default function Home() {
 
   // Convert pages to schema for renderer
   const schema = React.useMemo(() => formPagesToSchema(pages), [pages])
+
+  // Find selected field for editing
+  const selectedField = React.useMemo(() => {
+    if (!editFieldId) return null
+    for (const page of pages) {
+      const field = page.fields.find((f) => f.id === editFieldId)
+      if (field) return field
+    }
+    return null
+  }, [editFieldId, pages])
+
+  // Handle edit field
+  const handleEditField = (fieldId: string) => {
+    setEditFieldId(fieldId)
+    setEditPanelOpen(true)
+  }
+
+  // Handle field update from edit panel
+  const handleFieldUpdate = (field: FormField) => {
+    if (!field.id) return
+    updateField(field.id, field)
+  }
 
   // Determine if left sidebar (Field Library) is visible based on width
   const leftSidebarVisible = React.useMemo(() => {
@@ -384,6 +409,7 @@ export default function Home() {
           onFieldAdd={addField}
           onFieldUpdate={updateField}
           onFieldDelete={deleteField}
+          onFieldEdit={handleEditField}
           onFieldReorder={reorderFields}
           width={width}
           features={{
@@ -409,6 +435,14 @@ export default function Home() {
           Shorms - Local-first form builder powered by shadcn/ui
         </p>
       </footer>
+
+      {/* Edit Field Panel */}
+      <EditFormField
+        open={editPanelOpen}
+        onOpenChange={setEditPanelOpen}
+        selectedField={selectedField}
+        onUpdate={handleFieldUpdate}
+      />
     </div>
   )
 }
