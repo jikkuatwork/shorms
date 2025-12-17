@@ -1,7 +1,9 @@
 'use client'
 
 import * as React from 'react'
-import { Download, Eye, Play, SearchCode, Trash2, Upload } from 'lucide-react'
+import { Book, Download, Eye, History, Play, SearchCode, Trash2, Upload } from 'lucide-react'
+import Link from 'next/link'
+import { VERSION } from '@/lib/version'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import {
@@ -201,8 +203,26 @@ export default function Home() {
             <span className="hidden text-sm font-semibold sm:inline">
               Shorms
             </span>
+            <span className="hidden rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline">
+              v{VERSION}
+            </span>
           </div>
           <div className="hidden h-6 w-px bg-border sm:block" />
+          <nav className="hidden items-center gap-1 md:flex">
+            <Button variant="ghost" size="sm" asChild className="h-8 gap-1.5 px-2 text-xs">
+              <Link href="/docs">
+                <Book className="size-3.5" />
+                Docs
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild className="h-8 gap-1.5 px-2 text-xs">
+              <Link href="/changelog">
+                <History className="size-3.5" />
+                Changelog
+              </Link>
+            </Button>
+          </nav>
+          <div className="hidden h-6 w-px bg-border md:block" />
           <div className="hidden sm:block">
             <h1 className="text-lg font-semibold">Form Builder</h1>
             <p className="hidden text-xs text-muted-foreground md:block">
