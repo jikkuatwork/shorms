@@ -1,16 +1,90 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { nanoid } from 'nanoid'
-import type { FormField } from '@/types/field'
+import {
+  AtSignIcon,
+  CalendarIcon,
+  ChevronsUpDownIcon,
+  CircleDotIcon,
+  HashIcon,
+  SlidersHorizontalIcon,
+  SquareCheckIcon,
+  TextIcon,
+  ToggleLeftIcon,
+  TypeIcon,
+  UploadIcon,
+} from 'lucide-react'
+import { FieldType, type FormField } from '@/types/field'
 import type { FormPage } from './types'
+
+// Map field types to their icons for hydration from localStorage
+const fieldTypeToIcon: Record<string, typeof TypeIcon> = {
+  [FieldType.INPUT]: TypeIcon,
+  [FieldType.TEXTAREA]: TextIcon,
+  [FieldType.NUMBER_INPUT]: HashIcon,
+  [FieldType.EMAIL]: AtSignIcon,
+  [FieldType.CHECKBOX]: SquareCheckIcon,
+  [FieldType.SELECT]: ChevronsUpDownIcon,
+  [FieldType.DATE]: CalendarIcon,
+  [FieldType.RADIO_GROUP]: CircleDotIcon,
+  [FieldType.SWITCH]: ToggleLeftIcon,
+  [FieldType.COMBOBOX]: ChevronsUpDownIcon,
+  [FieldType.SLIDER]: SlidersHorizontalIcon,
+  [FieldType.FILE_UPLOAD]: UploadIcon,
+}
+
+const STORAGE_KEY = 'shorms-builder-state'
+
+// Hydrate pages with Icon components after loading from localStorage
+function hydratePages(pages: FormPage[]): FormPage[] {
+  return pages.map(page => ({
+    ...page,
+    fields: page.fields.map(field => ({
+      ...field,
+      Icon: fieldTypeToIcon[field.type] || TypeIcon,
+    })),
+  }))
+}
+
+// Load pages from localStorage
+function loadFromStorage(): FormPage[] | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      return hydratePages(parsed)
+    }
+  } catch (e) {
+    console.warn('Failed to load from localStorage:', e)
+  }
+  return null
+}
+
+// Save pages to localStorage (strips non-serializable Icon)
+function saveToStorage(pages: FormPage[]) {
+  if (typeof window === 'undefined') return
+  try {
+    // Strip Icon from fields before saving
+    const toSave = pages.map(page => ({
+      ...page,
+      fields: page.fields.map(({ Icon, ...field }) => field),
+    }))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave))
+  } catch (e) {
+    console.warn('Failed to save to localStorage:', e)
+  }
+}
 
 /**
  * Hook for managing Builder state
  * Provides a convenient way to manage form pages and fields without Zustand
+ * Automatically persists to localStorage
  *
  * @param initialPages - Optional initial pages (defaults to single empty page)
  * @returns Builder state and operations
  */
 export function useBuilderState(initialPages?: FormPage[]) {
+  const [isHydrated, setIsHydrated] = useState(false)
   const [pages, setPages] = useState<FormPage[]>(
     initialPages || [
       {
@@ -22,6 +96,23 @@ export function useBuilderState(initialPages?: FormPage[]) {
   )
 
   const [activePageId, setActivePageId] = useState(pages[0]?.id || '')
+
+  // Load from localStorage after hydration to avoid mismatch
+  useEffect(() => {
+    const stored = loadFromStorage()
+    if (stored && stored.length > 0) {
+      setPages(stored)
+      setActivePageId(stored[0].id)
+    }
+    setIsHydrated(true)
+  }, [])
+
+  // Persist to localStorage whenever pages change (only after hydration)
+  useEffect(() => {
+    if (isHydrated) {
+      saveToStorage(pages)
+    }
+  }, [pages, isHydrated])
 
   // ===== Page Operations =====
 

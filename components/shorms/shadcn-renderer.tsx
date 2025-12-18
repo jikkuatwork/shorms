@@ -31,9 +31,11 @@ import { format } from 'date-fns'
 
 interface ShadcnRendererProps extends Omit<RendererProps, 'renderField' | 'renderPage' | 'renderProgress'> {
   className?: string
+  title?: string
+  description?: string
 }
 
-export function ShadcnRenderer({ className, ...props }: ShadcnRendererProps) {
+export function ShadcnRenderer({ className, title, description, ...props }: ShadcnRendererProps) {
   // Custom field renderer using shadcn components
   const renderField = React.useCallback((field: ShormsFormField, value: any, onChange: (value: any) => void) => {
     return (
@@ -305,7 +307,13 @@ export function ShadcnRenderer({ className, ...props }: ShadcnRendererProps) {
   }, [])
 
   return (
-    <div className={cn('w-full max-w-2xl mx-auto', className)}>
+    <div className={cn('w-full mx-auto', className || 'max-w-2xl')}>
+      {(title || description) && (
+        <div className="mb-6">
+          {title && <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>}
+          {description && <p className="text-sm text-muted-foreground mt-1">{description}</p>}
+        </div>
+      )}
       <Renderer
         {...props}
         renderField={renderField}

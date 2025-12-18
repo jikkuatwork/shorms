@@ -47,7 +47,16 @@ import type { FormPage } from '@/components/shorms/builder/types'
 import type { FormField } from '@/types/field'
 
 type WidthSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
-type AppMode = 'builder' | 'runner'
+type AppMode = 'builder' | 'renderer'
+
+// Renderer shell width mappings (form inside has its own max-w-2xl constraint)
+const rendererWidthClasses: Record<WidthSize, string> = {
+  sm: 'max-w-2xl',  // 672px - compact shell
+  md: 'max-w-3xl',  // 768px - default
+  lg: 'max-w-4xl',  // 896px - comfortable
+  xl: 'max-w-5xl',  // 1024px - wide
+  full: 'max-w-6xl', // 1152px - extra wide
+}
 
 export default function Home() {
   const { toast } = useToast()
@@ -270,8 +279,23 @@ export default function Home() {
           </DropdownMenu>
         </div>
 
-        {/* Center: Mode toggle and Size selector */}
-        <div className="flex items-center gap-4">
+        {/* Right: Actions */}
+        <div className="flex items-center gap-1.5">
+          {/* Size selector */}
+          <div className="hidden items-center rounded-md border p-0.5 md:flex">
+            {sizes.map((size) => (
+              <Button
+                key={size.value}
+                variant={width === size.value ? 'secondary' : 'ghost'}
+                size="sm"
+                onClick={() => setWidth(size.value)}
+                className="h-7 px-2.5 text-xs"
+              >
+                {size.label}
+              </Button>
+            ))}
+          </div>
+
           {/* Mode toggle */}
           <div className="flex items-center rounded-md border p-0.5">
             <Button
@@ -284,36 +308,18 @@ export default function Home() {
               Builder
             </Button>
             <Button
-              variant={mode === 'runner' ? 'secondary' : 'ghost'}
+              variant={mode === 'renderer' ? 'secondary' : 'ghost'}
               size="sm"
-              onClick={() => setMode('runner')}
+              onClick={() => setMode('renderer')}
               className="h-7 gap-1.5 px-3 text-xs"
             >
               <Play className="size-3.5" />
-              Runner
+              Renderer
             </Button>
           </div>
 
-          {/* Size selector - only show in builder mode */}
-          {mode === 'builder' && (
-            <div className="hidden items-center rounded-md border p-0.5 md:flex">
-              {sizes.map((size) => (
-                <Button
-                  key={size.value}
-                  variant={width === size.value ? 'secondary' : 'ghost'}
-                  size="sm"
-                  onClick={() => setWidth(size.value)}
-                  className="h-7 px-2.5 text-xs"
-                >
-                  {size.label}
-                </Button>
-              ))}
-            </div>
-          )}
-        </div>
+          <Separator orientation="vertical" className="h-5" />
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-1.5">
           {/* Schema viewer */}
           <Dialog open={viewerOpen} onOpenChange={setViewerOpen}>
             <DialogTrigger asChild>
@@ -451,22 +457,18 @@ export default function Home() {
             className="mx-auto h-full w-full overflow-hidden rounded-lg border bg-card shadow-sm"
           />
         ) : (
-          <div className="mx-auto h-full w-full max-w-3xl overflow-hidden rounded-lg border bg-card shadow-sm">
-            <div className="flex h-full flex-col">
-              <div className="shrink-0 border-b bg-muted/30 px-6 py-4">
-                <h2 className="text-lg font-semibold">Form Preview</h2>
-                <p className="text-sm text-muted-foreground">Fill out the form and submit to test</p>
+          <div className={`mx-auto h-full w-full overflow-hidden rounded-lg border bg-card shadow-sm ${rendererWidthClasses[width]}`}>
+            <ScrollArea className="h-full">
+              <div className="p-6">
+                <ShadcnRenderer
+                  schema={schema}
+                  onSubmit={handleSubmit}
+                  features={{ stateManagement: true }}
+                  title="Form Preview"
+                  description="Fill out the form and submit to test"
+                />
               </div>
-              <ScrollArea className="flex-1">
-                <div className="p-6">
-                  <ShadcnRenderer
-                    schema={schema}
-                    onSubmit={handleSubmit}
-                    features={{ stateManagement: true }}
-                  />
-                </div>
-              </ScrollArea>
-            </div>
+            </ScrollArea>
           </div>
         )}
       </main>
