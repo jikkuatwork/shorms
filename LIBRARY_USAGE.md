@@ -1,6 +1,6 @@
 # Shorms Library Usage Guide
 
-**Version:** 0.3.1
+**Version:** 0.3.2
 **Last Updated:** 2025-12-18
 
 This guide covers how to use the Shorms library components (Builder, Renderer, and utilities) in your React applications.

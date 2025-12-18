@@ -1,6 +1,6 @@
 {
   "name": "shorms",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Local-first multi-page form builder for shadcn/ui and React Hook Form",
   "author": "Shorms Contributors",
   "license": "MIT",
