@@ -7,7 +7,7 @@
 
 import * as React from 'react'
 import { Renderer } from './renderer'
-import type { RendererProps, FormField as ShormsFormField, FormPage } from './renderer/types'
+import type { RendererProps, FormField as ShormsFormField, FormPage, NavigationProps } from './renderer/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -273,32 +273,45 @@ export function ShadcnRenderer({ className, ...props }: ShadcnRendererProps) {
     )
   }, [])
 
+  // Custom navigation with shadcn buttons
+  const renderNavigation = React.useCallback((navProps: NavigationProps) => {
+    return (
+      <div className="flex justify-between mt-8">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={navProps.onPrevious}
+          disabled={!navProps.canGoPrevious}
+        >
+          <ChevronLeft className="mr-2 h-4 w-4" />
+          Previous
+        </Button>
+
+        {navProps.isLastPage ? (
+          <Button type="submit">
+            Submit
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            onClick={navProps.onNext}
+          >
+            Next
+            <ChevronRight className="ml-2 h-4 w-4" />
+          </Button>
+        )}
+      </div>
+    )
+  }, [])
+
   return (
-    <div className={cn('w-full max-w-2xl mx-auto shadcn-renderer-wrapper', className)}>
-      <style jsx global>{`
-        .shadcn-renderer-wrapper form button[type="button"],
-        .shadcn-renderer-wrapper form button[type="submit"] {
-          @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
-          @apply h-10 px-4 py-2;
-        }
-
-        .shadcn-renderer-wrapper form button[type="button"] {
-          @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
-        }
-
-        .shadcn-renderer-wrapper form button[type="submit"] {
-          @apply bg-primary text-primary-foreground hover:bg-primary/90;
-        }
-
-        .shadcn-renderer-wrapper form button[type="button"]:disabled {
-          @apply opacity-50 cursor-not-allowed;
-        }
-      `}</style>
+    <div className={cn('w-full max-w-2xl mx-auto', className)}>
       <Renderer
         {...props}
         renderField={renderField}
         renderPage={renderPage}
         renderProgress={renderProgress}
+        renderNavigation={renderNavigation}
       />
     </div>
   )

@@ -5,8 +5,8 @@
 
 'use client'
 
-import React, { useEffect, useImperativeHandle, useState, useCallback } from 'react'
-import type { RendererProps, FormField, FormPage } from './types'
+import React, { useEffect, useImperativeHandle, useState, useCallback, useRef } from 'react'
+import type { RendererProps, FormField, FormPage, NavigationProps } from './types'
 import { useFormState } from './use-form-state'
 import { useValidation } from './use-validation'
 import { useSuggestions } from './use-suggestions'
@@ -32,6 +32,7 @@ export const Renderer = React.forwardRef<any, RendererProps>((props, ref) => {
     renderField,
     renderPage,
     renderProgress,
+    renderNavigation,
   } = props
 
   // Extract feature flags
@@ -44,6 +45,9 @@ export const Renderer = React.forwardRef<any, RendererProps>((props, ref) => {
   // State: Current page
   const [currentPageIndex, setCurrentPageIndex] = useState(0)
   const currentPage = schema.pages[currentPageIndex]
+
+  // Ref to prevent submission immediately after navigation
+  const justNavigatedRef = useRef(false)
 
   // Initialize form state
   const formState = useFormState({
@@ -162,8 +166,14 @@ export const Renderer = React.forwardRef<any, RendererProps>((props, ref) => {
 
     // Navigate to next page
     if (currentPageIndex < schema.pages.length - 1) {
+      // Set flag to prevent immediate submission when landing on last page
+      justNavigatedRef.current = true
       setCurrentPageIndex(prev => prev + 1)
       window.scrollTo(0, 0)
+      // Clear the flag after a short delay
+      setTimeout(() => {
+        justNavigatedRef.current = false
+      }, 100)
     }
   }, [currentPageIndex, schema.pages.length, currentPage, validation])
 
@@ -177,6 +187,17 @@ export const Renderer = React.forwardRef<any, RendererProps>((props, ref) => {
   // Handler: Form submission
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Prevent submission if we just navigated to this page
+    if (justNavigatedRef.current) {
+      return
+    }
+
+    // Only allow submission on the last page
+    if (currentPageIndex < schema.pages.length - 1) {
+      // Don't submit, don't navigate - user must use Next button
+      return
+    }
 
     // Validate all fields
     const allValidation = await validation.validateAll()
@@ -219,7 +240,7 @@ export const Renderer = React.forwardRef<any, RendererProps>((props, ref) => {
     } catch (error) {
       console.error('Form submission error:', error)
     }
-  }, [formState, validation, onSubmit])
+  }, [formState, validation, onSubmit, currentPageIndex, schema.pages.length])
 
   // Handler: Bulk file upload
   const handleBulkFileUpload = useCallback(async (files: File[]) => {
@@ -404,45 +425,46 @@ export const Renderer = React.forwardRef<any, RendererProps>((props, ref) => {
         }
 
         {/* Navigation */}
-        <div className="flex justify-between mt-8">
-          <button
-            type="button"
-            onClick={handlePrevPage}
-            disabled={currentPageIndex === 0}
-            className="px-4 py-2 border rounded-md disabled:opacity-50"
-          >
-            Previous
-          </button>
-
-          {currentPageIndex < schema.pages.length - 1 ? (
+        {renderNavigation ? (
+          renderNavigation({
+            currentPageIndex,
+            totalPages: schema.pages.length,
+            onPrevious: handlePrevPage,
+            onNext: handleNextPage,
+            canGoPrevious: currentPageIndex > 0,
+            canGoNext: currentPageIndex < schema.pages.length - 1,
+            isLastPage: currentPageIndex === schema.pages.length - 1,
+          })
+        ) : (
+          <div className="flex justify-between mt-8">
             <button
               type="button"
-              onClick={handleNextPage}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              onClick={handlePrevPage}
+              disabled={currentPageIndex === 0}
+              className="px-4 py-2 border rounded-md disabled:opacity-50"
             >
-              Next
+              Previous
             </button>
-          ) : (
-            <button
-              type="submit"
-              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-            >
-              Submit
-            </button>
-          )}
-        </div>
-      </form>
 
-      {/* Debug info (development only) */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="mt-8 p-4 bg-gray-100 rounded-md text-xs">
-          <p><strong>Dirty:</strong> {formState.isDirty ? 'Yes' : 'No'}</p>
-          <p><strong>Valid:</strong> {formState.isValid ? 'Yes' : 'No'}</p>
-          <p><strong>Suggestions:</strong> {formState.getSuggestionCount()}</p>
-          <p><strong>Can Undo:</strong> {formState.canUndo ? 'Yes' : 'No'}</p>
-          <p><strong>Can Redo:</strong> {formState.canRedo ? 'Yes' : 'No'}</p>
-        </div>
-      )}
+            {currentPageIndex < schema.pages.length - 1 ? (
+              <button
+                type="button"
+                onClick={handleNextPage}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              >
+              Next
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+              >
+                Submit
+              </button>
+            )}
+          </div>
+        )}
+      </form>
     </div>
   )
 })

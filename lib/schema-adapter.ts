@@ -33,7 +33,7 @@ export function formPagesToSchema(pages: FormPage[]): ShormsSchema {
         // Map legacy fields to config
         config: {
           ...(field.placeholder && { placeholder: field.placeholder }),
-          ...('options' in field && field.options ? { options: field.options } : {}),
+          ...('choices' in field && field.choices ? { options: field.choices } : {}),
         },
       })),
     })),
@@ -57,7 +57,7 @@ export function schemaToFormPages(schema: ShormsSchema): FormPage[] {
       description: field.description,
       placeholder: (field.config?.placeholder as string) || undefined,
       required: field.required,
-      options: (field.config?.options as any[]) || undefined,
+      choices: (field.config?.options as any[]) || undefined,
       validation: field.validation ? {
         required: field.required,
         min: field.validation.min || field.validation.minLength,

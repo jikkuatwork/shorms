@@ -399,4 +399,15 @@ export interface RendererProps {
   renderField?: (field: FormField, value: any, onChange: (value: any) => void) => ReactNode
   renderPage?: (page: FormPage, children: ReactNode) => ReactNode
   renderProgress?: (current: number, total: number, progress: number) => ReactNode
+  renderNavigation?: (props: NavigationProps) => ReactNode
+}
+
+export interface NavigationProps {
+  currentPageIndex: number
+  totalPages: number
+  onPrevious: () => void
+  onNext: () => void
+  canGoPrevious: boolean
+  canGoNext: boolean
+  isLastPage: boolean
 }

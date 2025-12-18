@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Book, ChevronDown, Download, Eye, Github, History, Play, Trash2, Upload } from 'lucide-react'
+import { Book, ChevronDown, Download, Eye, Github, History, Hammer, Play, Trash2, Upload } from 'lucide-react'
 import Link from 'next/link'
 import { VERSION } from '@/lib/version'
 import { useToast } from '@/hooks/use-toast'
@@ -47,11 +47,12 @@ import type { FormPage } from '@/components/shorms/builder/types'
 import type { FormField } from '@/types/field'
 
 type WidthSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
+type AppMode = 'builder' | 'runner'
 
 export default function Home() {
   const { toast } = useToast()
   const [width, setWidth] = React.useState<WidthSize>('lg')
-  const [previewOpen, setPreviewOpen] = React.useState(false)
+  const [mode, setMode] = React.useState<AppMode>('builder')
   const [viewerOpen, setViewerOpen] = React.useState(false)
   const [importOpen, setImportOpen] = React.useState(false)
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
@@ -191,27 +192,14 @@ export default function Home() {
     (values: any) => {
       console.log('Form submitted:', values)
 
-      // Format the values for display
-      const fieldCount = Object.keys(values).length
-      const valuesList = Object.entries(values)
-        .slice(0, 3)
-        .map(([key, val]) => {
-          const displayVal = typeof val === 'object'
-            ? JSON.stringify(val)
-            : String(val)
-          return `${key}: ${displayVal.length > 30 ? displayVal.substring(0, 30) + '...' : displayVal}`
-        })
-        .join('\n')
-
       toast({
-        title: 'Form Submitted Successfully! 🎉',
+        title: 'You submitted the following values:',
         description: (
-          <div className="mt-2 space-y-1">
-            <p className="font-medium">{fieldCount} field{fieldCount !== 1 ? 's' : ''} submitted:</p>
-            <pre className="text-xs whitespace-pre-wrap">{valuesList}</pre>
-            {fieldCount > 3 && <p className="text-xs text-muted-foreground">...and {fieldCount - 3} more</p>}
-            <p className="text-xs text-muted-foreground mt-2">Check console for full data</p>
-          </div>
+          <pre className="mt-2 w-[340px] overflow-auto rounded-md bg-slate-950 p-4">
+            <code className="overflow-auto text-white">
+              {JSON.stringify(values, null, 2)}
+            </code>
+          </pre>
         ),
       })
     },
@@ -282,45 +270,51 @@ export default function Home() {
           </DropdownMenu>
         </div>
 
-        {/* Center: Size selector */}
-        <div className="hidden items-center rounded-md border p-0.5 md:flex">
-          {sizes.map((size) => (
+        {/* Center: Mode toggle and Size selector */}
+        <div className="flex items-center gap-4">
+          {/* Mode toggle */}
+          <div className="flex items-center rounded-md border p-0.5">
             <Button
-              key={size.value}
-              variant={width === size.value ? 'secondary' : 'ghost'}
+              variant={mode === 'builder' ? 'secondary' : 'ghost'}
               size="sm"
-              onClick={() => setWidth(size.value)}
-              className="h-7 px-2.5 text-xs"
+              onClick={() => setMode('builder')}
+              className="h-7 gap-1.5 px-3 text-xs"
             >
-              {size.label}
+              <Hammer className="size-3.5" />
+              Builder
             </Button>
-          ))}
+            <Button
+              variant={mode === 'runner' ? 'secondary' : 'ghost'}
+              size="sm"
+              onClick={() => setMode('runner')}
+              className="h-7 gap-1.5 px-3 text-xs"
+            >
+              <Play className="size-3.5" />
+              Runner
+            </Button>
+          </div>
+
+          {/* Size selector - only show in builder mode */}
+          {mode === 'builder' && (
+            <div className="hidden items-center rounded-md border p-0.5 md:flex">
+              {sizes.map((size) => (
+                <Button
+                  key={size.value}
+                  variant={width === size.value ? 'secondary' : 'ghost'}
+                  size="sm"
+                  onClick={() => setWidth(size.value)}
+                  className="h-7 px-2.5 text-xs"
+                >
+                  {size.label}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Right: Actions */}
         <div className="flex items-center gap-1.5">
-          {/* Primary actions */}
-          <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="gap-1.5" title="Run Form">
-                <Play className="size-3.5" />
-                <span className="hidden sm:inline">Run</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="flex h-[80vh] max-w-3xl flex-col p-0">
-              <DialogHeader className="p-6 pb-2">
-                <DialogTitle>Form Preview</DialogTitle>
-              </DialogHeader>
-              <ScrollArea className="flex-1 p-6 pt-2">
-                <ShadcnRenderer
-                  schema={schema}
-                  onSubmit={handleSubmit}
-                  features={{ stateManagement: true }}
-                />
-              </ScrollArea>
-            </DialogContent>
-          </Dialog>
-
+          {/* Schema viewer */}
           <Dialog open={viewerOpen} onOpenChange={setViewerOpen}>
             <DialogTrigger asChild>
               <Button size="sm" variant="outline" className="gap-1.5" title="View Schema">
@@ -424,37 +418,57 @@ export default function Home() {
       </header>
 
       <main className="flex min-h-0 flex-1 p-4 md:p-6">
-        <Builder
-          pages={pages}
-          activePageId={activePageId}
-          onPagesChange={setPages}
-          onActivePageChange={setActivePageId}
-          onPageAdd={addPage}
-          onPageDelete={deletePage}
-          onPageRename={updatePageTitle}
-          onPageReorder={reorderPages}
-          onFieldAdd={addField}
-          onFieldUpdate={updateField}
-          onFieldDelete={deleteField}
-          onFieldEdit={handleEditField}
-          onFieldReorder={reorderFields}
-          width={width}
-          features={{
-            dragDrop: true,
-            pageManagement: true,
-            fieldSearch: true,
-            commandPalette: true, // Enable command palette
-          }}
-          renderCommandPalette={() => (
-            <ControlledFieldCommandPalette
-              fields={defaultFieldTemplates}
-              onFieldAdd={addField}
-              generateFieldId={generateFieldId}
-              generateFieldName={generateFieldName}
-            />
-          )}
-          className="mx-auto h-full w-full overflow-hidden rounded-lg border bg-card shadow-sm"
-        />
+        {mode === 'builder' ? (
+          <Builder
+            pages={pages}
+            activePageId={activePageId}
+            onPagesChange={setPages}
+            onActivePageChange={setActivePageId}
+            onPageAdd={addPage}
+            onPageDelete={deletePage}
+            onPageRename={updatePageTitle}
+            onPageReorder={reorderPages}
+            onFieldAdd={addField}
+            onFieldUpdate={updateField}
+            onFieldDelete={deleteField}
+            onFieldEdit={handleEditField}
+            onFieldReorder={reorderFields}
+            width={width}
+            features={{
+              dragDrop: true,
+              pageManagement: true,
+              fieldSearch: true,
+              commandPalette: true,
+            }}
+            renderCommandPalette={() => (
+              <ControlledFieldCommandPalette
+                fields={defaultFieldTemplates}
+                onFieldAdd={addField}
+                generateFieldId={generateFieldId}
+                generateFieldName={generateFieldName}
+              />
+            )}
+            className="mx-auto h-full w-full overflow-hidden rounded-lg border bg-card shadow-sm"
+          />
+        ) : (
+          <div className="mx-auto h-full w-full max-w-3xl overflow-hidden rounded-lg border bg-card shadow-sm">
+            <div className="flex h-full flex-col">
+              <div className="shrink-0 border-b bg-muted/30 px-6 py-4">
+                <h2 className="text-lg font-semibold">Form Preview</h2>
+                <p className="text-sm text-muted-foreground">Fill out the form and submit to test</p>
+              </div>
+              <ScrollArea className="flex-1">
+                <div className="p-6">
+                  <ShadcnRenderer
+                    schema={schema}
+                    onSubmit={handleSubmit}
+                    features={{ stateManagement: true }}
+                  />
+                </div>
+              </ScrollArea>
+            </div>
+          </div>
+        )}
       </main>
 
       <footer className="shrink-0 border-t bg-muted/30 py-4 text-center">
